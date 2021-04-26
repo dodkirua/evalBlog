@@ -73,6 +73,11 @@ class RoleManager{
         return $request->execute();
     }
 
+    /**
+     * insert data in DB
+     * @param string $name
+     * @return bool
+     */
     public function insert(string $name) : bool {
         $request = DB::getInstance()->prepare("INSERT INTO role 
                     (name)

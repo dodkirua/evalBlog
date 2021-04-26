@@ -115,6 +115,14 @@ class CommentManager{
         return $request->execute();
     }
 
+    /**
+     * insert data in DB
+     * @param string $username
+     * @param string $mail
+     * @param string $pass
+     * @param int $roleId
+     * @return bool
+     */
     public function insert(string $username, string $mail,string $pass,int $roleId) : bool {
         $request = DB::getInstance()->prepare("INSERT INTO comment 
                     (username, mail, pass, role_id)

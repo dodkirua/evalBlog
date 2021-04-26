@@ -28,12 +28,11 @@ class UserManager{
             $data = $request->fetch();
             if ($data) {
                 $manager = new RoleManager();
-                $role = $manager->getById($data['role_id']);
 
                 $class->setId($id)
                     ->setUsername($data['username'])
                     ->setMail($data['mail'])
-                    ->setRole($role)
+                    ->setRole($manager->getById($data['role_id']))
                 ;
                 if ($pass){
                     $class->setPass($data['pass']);
@@ -60,9 +59,8 @@ class UserManager{
             if ($data) {
                 foreach ($data as $item) {
                     $manager = new RoleManager();
-                    $role = $manager->getById($data['role_id']);
 
-                    $class = new User(intval($item['id']),$item['username'],$item['mail'],'',$role);
+                    $class = new User(intval($item['id']),$item['username'],$item['mail'],'',$manager->getById($data['role_id']));
                     $classes[] = $class;
                 }
             }
@@ -115,6 +113,14 @@ class UserManager{
         return $request->execute();
     }
 
+    /**
+     * insert data in DB
+     * @param string $username
+     * @param string $mail
+     * @param string $pass
+     * @param int $roleId
+     * @return bool
+     */
     public function insert(string $username, string $mail,string $pass,int $roleId) : bool {
         $request = DB::getInstance()->prepare("INSERT INTO user 
                     (username, mail, pass, role_id)

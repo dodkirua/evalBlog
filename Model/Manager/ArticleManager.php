@@ -2,6 +2,7 @@
 
 namespace Model\Manager;
 
+use DateTime;
 use Model\DB;
 use Model\Entity\Article;
 use Model\Manager\UserManager;
@@ -18,7 +19,7 @@ class ArticleManager{
      * @param bool $pass
      * @return Article
      */
-    public function getById(int $id,bool $pass = false): Article {
+    public function getById(int $id): Article {
         $class = new Article();
         $request = DB::getInstance()->prepare("SELECT * FROM article where id = :id");
         $request->bindValue(":id",$id);
@@ -27,20 +28,15 @@ class ArticleManager{
         if ($result){
             $data = $request->fetch();
             if ($data) {
-                $manager = new RoleManager();
-                $role = $manager->getById($data['role_id']);
+                $manager = new UserManager();
 
                 $class->setId($id)
-                    ->setUsername($data['username'])
-                    ->setMail($data['mail'])
-                    ->setRole($role)
+                    ->setTitle($data['title'])
+                    ->setContent($data['content'])
+                    ->setDate($data['date'])
+                    ->setImage($data['image'])
+                    ->setUser($manager->getById($data['user_id']))
                 ;
-                if ($pass){
-                    $class->setPass($data['pass']);
-                }
-                else {
-                    $class->setPass('');
-                }
             }
         }
         return $class;
@@ -51,8 +47,88 @@ class ArticleManager{
      * @return array
      */
     public function getAll() : array {
-        $classes = [];
         $request = DB::getInstance()->prepare("SELECT * FROM article");
+        return $this->getTmp($request);
+    }
+
+    /**
+     * return a array with all the article
+     * @param int $userId
+     * @return array
+     */
+    public function getAllByUserId(int $userId) : array {
+
+        $request = DB::getInstance()->prepare("SELECT * FROM article WHERE user_id = :user");
+        $request->bindValue(":user_id",$userId);
+        return $this->getTmp($request);
+    }
+
+    /**
+     * update on DB by id
+     * @param int $id
+     * @param string|null $title
+     * @param string|null $content
+     * @param string|null $image
+     * @param int|null $userId
+     * @return bool
+     */
+    public function update(int $id, string $title= null, string $content = null, string $image = null, int $userId= null): bool    {
+        // modify the not null values
+        if (is_null($content) || is_null($userId) ){
+            $data = $this->getById($id);
+
+            if (is_null($content)){
+                $content = $data->getContent();
+            }
+
+            if (is_null($userId)){
+                $userId = $data->getUser()->getId();
+            }
+
+        }
+        $request = DB::getInstance()->prepare("UPDATE article 
+                    SET content = :content, image = :img, user_id = :user, title = :title
+                    WHERE id = :id
+                    ");
+        $request->bindValue(":id",$id);
+        $request->bindValue(":content",mb_strtolower($content));
+        $request->bindValue(":img",mb_strtolower($image));
+        $request->bindValue(":title",mb_strtolower($title));
+        $request->bindValue(":user",$userId);
+
+        return $request->execute();
+    }
+
+    /**
+     * insert data in DB
+     * @param string $content
+     * @param int $userId
+     * @param string|null $image
+     * @param string|null $title
+     * @return bool
+     */
+    public function insert( string $content, int $userId, string $image = null, string $title = null) : bool {
+        $date = new DateTime();
+        $request = DB::getInstance()->prepare("INSERT INTO article 
+                    (title, content, date, image, user_id)
+                    VALUES (:title, :content, :date, :img, :user)
+                    ");
+        $request->bindValue(":title",mb_strtolower($title));
+        $request->bindValue(":content",mb_strtolower($content));
+        $request->bindValue(":img",mb_strtolower($image));
+        $request->bindValue(":date",$date->getTimestamp());
+        $request->bindValue(":user",$userId);
+
+        return $request->execute();
+    }
+
+    /**
+     * return a array for use in other getAll
+     * @param $request
+     * @return array
+     */
+    private function getTmp($request) : array {
+        $classes = [];
         $result = $request->execute();
 
         if ($result){
@@ -60,70 +136,12 @@ class ArticleManager{
             if ($data) {
                 foreach ($data as $item) {
                     $manager = new RoleManager();
-                    $role = $manager->getById($data['role_id']);
 
-                    $class = new Article(intval($item['id']),$item['username'],$item['mail'],'',$role);
+                    $class = new Article(intval($item['id']), $item['title'], $item['content'], $item['date'],$item['image'], $manager->getById($data['role_id']));
                     $classes[] = $class;
                 }
             }
         }
         return $classes;
-    }
-
-    /**
-     * update on DB by id
-     * @param int $id
-     * @param string|null $username
-     * @param string|null $mail
-     * @param string|null $pass
-     * @param int|null $roleId
-     * @return bool
-     */
-    public function update(int $id, string $username = null, string $mail = null, string $pass = null, int $roleId = null): bool    {
-        // modify the not null values
-        if (is_null($username) || is_null($mail) || is_null($pass) || is_null($roleId) ){
-            if (is_null($pass)){
-                $data = $this->getById($id,true);
-                $pass = $data->getPass();
-            }
-            else {
-                $data = $this->getById($id);
-
-                if (is_null($username)){
-                    $username = $data->getUsername();
-                }
-
-                if (is_null($mail)){
-                    $mail = $data->getMail();
-                }
-
-                if (is_null($roleId)) {
-                    $roleId = $data->getRole()->getId();
-                }
-            }
-        }
-        $request = DB::getInstance()->prepare("UPDATE article 
-                    SET username = :name, mail = :mail, pass = :pass, role_id = :role 
-                    WHERE id = :id
-                    ");
-        $request->bindValue(":id",$id);
-        $request->bindValue(":username",mb_strtolower($username));
-        $request->bindValue(":mail",mb_strtolower($mail));
-        $request->bindValue(":pass",$pass);
-        $request->bindValue(":role",$roleId);
-
-        return $request->execute();
-    }
-
-    public function insert(string $username, string $mail,string $pass,int $roleId) : bool {
-        $request = DB::getInstance()->prepare("INSERT INTO article 
-                    (username, mail, pass, role_id)
-                    VALUES (:username, :mail, :pass, :role)
-                    ");
-        $request->bindValue(":username",mb_strtolower($username));
-        $request->bindValue(":mail",mb_strtolower($mail));
-        $request->bindValue(":pass",$pass);
-        $request->bindValue(":role",$roleId);
-        return $request->execute();
     }
 }
