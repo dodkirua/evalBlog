@@ -2,7 +2,7 @@
 
 namespace Model\Entity;
 
-class Role extends \Model\Entity\User
+class Role
 {
     private ?int $id;
     private ?string $name;
