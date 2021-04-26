@@ -136,6 +136,17 @@ class CommentManager{
     }
 
     /**
+     * delete a comment by id
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id) : bool {
+        $request = DB::getInstance()->prepare("DELETE FROM comment WHERE id = :id");
+        $request->bindValue(':id',$id);
+        return $request->execute();
+    }
+
+    /**
      * return a array for use in other getAll
      * @param $request
      * @return array

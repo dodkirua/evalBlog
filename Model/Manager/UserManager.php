@@ -132,4 +132,28 @@ class UserManager{
         $request->bindValue(":role",$roleId);
         return $request->execute();
     }
+
+    /**
+     * delete a article by id
+     * @param int $id
+     * @return bool
+     */
+    public function delete(int $id) : bool {
+        // update the article and comment for this user and replace by casper
+        $CommentManager = new CommentManager();
+        $array = $CommentManager->getAllByUser($id);
+        foreach ($array as $item){
+            $CommentManager->update($item['id'],'','',4);
+        }
+
+        $articleManager = new ArticleManager();
+        $array = $articleManager->getAllByUserId($id);
+        foreach ($array as $item){
+            $articleManager->update($item['id'],'','','',4);
+        }
+
+        $request = DB::getInstance()->prepare("DELETE FROM user WHERE id = :id");
+        $request->bindValue(':id',$id);
+        return $request->execute();
+    }
 }
