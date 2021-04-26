@@ -2,11 +2,14 @@
 
 namespace Model\Manager;
 
+use DateTime;
 use Model\DB;
 use Model\Entity\Comment;
+use Model\Manager\ArticleManager;
 use Model\Manager\UserManager;
 use Model\Manager\Traits\ManagerTrait;
 use Model\Entity\User;
+use Model\Entity\Article;
 
 class CommentManager{
 
@@ -15,10 +18,9 @@ class CommentManager{
     /**
      * return a comment by id
      * @param int $id
-     * @param bool $pass
      * @return Comment
      */
-    public function getById(int $id,bool $pass = false): Comment {
+    public function getById(int $id): Comment {
         $class = new Comment();
         $request = DB::getInstance()->prepare("SELECT * FROM comment where id = :id");
         $request->bindValue(":id",$id);
@@ -27,20 +29,16 @@ class CommentManager{
         if ($result){
             $data = $request->fetch();
             if ($data) {
-                $manager = new RoleManager();
-                $role = $manager->getById($data['role_id']);
+                $articleManager = new ArticleManager();
+                $userManager = new UserManager();
 
                 $class->setId($id)
-                    ->setCommentnam($data['username'])
-                    ->setMail($data['mail'])
-                    ->setRole($role)
+                    ->setContent($data['content'])
+                    ->setDate($data['date'])
+                    ->setArticle($articleManager->getById($data['article_id']))
+                    ->setUser($userManager->getById($data['user_id']))
                 ;
-                if ($pass){
-                    $class->setPass($data['pass']);
-                }
-                else {
-                    $class->setPass('');
-                }
+
             }
         }
         return $class;
@@ -51,87 +49,113 @@ class CommentManager{
      * @return array
      */
     public function getAll() : array {
-        $classes = [];
         $request = DB::getInstance()->prepare("SELECT * FROM user");
-        $result = $request->execute();
+        return $this->getTmp($request);
+    }
 
-        if ($result){
-            $data = $request->fetchAll();
-            if ($data) {
-                foreach ($data as $item) {
-                    $manager = new RoleManager();
-                    $role = $manager->getById($data['role_id']);
+    /**
+     * return all comment for a user
+     * @param int $userId
+     * @return array
+     */
+    public function getAllByUser(int $userId): array    {
+        $request = DB::getInstance()->prepare("SELECT * FROM comment WHERE user_id = :user");
+        $request->bindValue(":user_id",$userId);
+        return $this->getTmp($request);
+    }
 
-                    $class = new Comment(intval($item['id']),$item['username'],$item['mail'],'',$role);
-                    $classes[] = $class;
-                }
-            }
-        }
-        return $classes;
+    /**
+     * return all comment for an article
+     * @param int $articleId
+     * @return array
+     */
+    public function getAllByArticle(int $articleId): array    {
+        $request = DB::getInstance()->prepare("SELECT * FROM comment WHERE user_id = :user");
+        $request->bindValue(":user_id",$articleId);
+        return $this->getTmp($request);
     }
 
     /**
      * update on DB by id
      * @param int $id
-     * @param string|null $username
-     * @param string|null $mail
-     * @param string|null $pass
-     * @param int|null $roleId
+     * @param string|null $content
+     * @param int|null $articleId
+     * @param int|null $userId
      * @return bool
      */
-    public function update(int $id, string $username = null, string $mail = null, string $pass = null, int $roleId = null): bool    {
+    public function update(int $id, string $content = null, int $articleId = null, int $userId = null): bool    {
         // modify the not null values
-        if (is_null($username) || is_null($mail) || is_null($pass) || is_null($roleId) ){
-            if (is_null($pass)){
-                $data = $this->getById($id,true);
-                $pass = $data->getPass();
+        if (is_null($content) || is_null($articleId) || is_null($userId) ){
+
+            $data = $this->getById($id);
+
+            if (is_null($content)){
+                $content = $data->getContent();
             }
-            else {
-                $data = $this->getById($id);
 
-                if (is_null($username)){
-                    $username = $data->getUsername();
-                }
-
-                if (is_null($mail)){
-                    $mail = $data->getMail();
-                }
-
-                if (is_null($roleId)) {
-                    $roleId = $data->getRole()->getId();
-                }
+            if (is_null($articleId)){
+                $articleId = $data->getArticle()->getId();
             }
+
+            if (is_null($userId)) {
+                $userId = $data->getUser()->getId();
+            }
+
         }
         $request = DB::getInstance()->prepare("UPDATE comment 
-                    SET username = :name, mail = :mail, pass = :pass, role_id = :role 
+                    SET content = :content, article_id = :article, user_id = :user 
                     WHERE id = :id
                     ");
         $request->bindValue(":id",$id);
-        $request->bindValue(":username",mb_strtolower($username));
-        $request->bindValue(":mail",mb_strtolower($mail));
-        $request->bindValue(":pass",$pass);
-        $request->bindValue(":role",$roleId);
+        $request->bindValue(":username",mb_strtolower($content));
+        $request->bindValue(":article",$articleId);
+        $request->bindValue(":user",$userId);
 
         return $request->execute();
     }
 
     /**
      * insert data in DB
-     * @param string $username
-     * @param string $mail
-     * @param string $pass
-     * @param int $roleId
+     * @param string $content
+     * @param int $articleId
+     * @param int $userId
      * @return bool
      */
-    public function insert(string $username, string $mail,string $pass,int $roleId) : bool {
+    public function insert(string $content , int $articleId , int $userId) : bool {
+        $date = new DateTime();
         $request = DB::getInstance()->prepare("INSERT INTO comment 
-                    (username, mail, pass, role_id)
-                    VALUES (:username, :mail, :pass, :role)
+                    (content, date, article_id, user_id)
+                    VALUES (:content, :date, :article, :user)
                     ");
-        $request->bindValue(":username",mb_strtolower($username));
-        $request->bindValue(":mail",mb_strtolower($mail));
-        $request->bindValue(":pass",$pass);
-        $request->bindValue(":role",$roleId);
+        $request->bindValue(":username",mb_strtolower($content));
+        $request->bindValue(":article",$articleId);
+        $request->bindValue(":user",$userId);
+        $request->bindValue(':date',$date->getTimestamp());
+
         return $request->execute();
+    }
+
+    /**
+     * return a array for use in other getAll
+     * @param $request
+     * @return array
+     */
+    private function getTmp($request) : array {
+        $classes = [];
+        $result = $request->execute();
+
+        if ($result){
+            $data = $request->fetchAll();
+            if ($data) {
+                foreach ($data as $item) {
+                    $articleManager = new ArticleManager();
+                    $userManager = new UserManager();
+
+                    $class = new Comment(intval($item['id']), $item['content'], $item['date'], $articleManager->getById($data['article_id']), $userManager->getById($data['user_id']));
+                    $classes[] = $class;
+                }
+            }
+        }
+        return $classes;
     }
 }

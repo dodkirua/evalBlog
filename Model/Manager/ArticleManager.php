@@ -16,7 +16,6 @@ class ArticleManager{
     /**
      * return a Article by id
      * @param int $id
-     * @param bool $pass
      * @return Article
      */
     public function getById(int $id): Article {
@@ -57,7 +56,6 @@ class ArticleManager{
      * @return array
      */
     public function getAllByUserId(int $userId) : array {
-
         $request = DB::getInstance()->prepare("SELECT * FROM article WHERE user_id = :user");
         $request->bindValue(":user_id",$userId);
         return $this->getTmp($request);
