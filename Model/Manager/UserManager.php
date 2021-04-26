@@ -19,30 +19,22 @@ class UserManager{
      * @return User
      */
     public function getById(int $id,bool $pass = false): User {
-        $class = new User();
+
         $request = DB::getInstance()->prepare("SELECT * FROM user where id = :id");
         $request->bindValue(":id",$id);
-        $result = $request->execute();
+        return $this->getOne($request,$pass);
+    }
 
-        if ($result){
-            $data = $request->fetch();
-            if ($data) {
-                $manager = new RoleManager();
+    /**
+     * return User by username
+     * @param string $username
+     * @return User
+     */
+    public function getByUsername(string $username): User {
 
-                $class->setId($id)
-                    ->setUsername($data['username'])
-                    ->setMail($data['mail'])
-                    ->setRole($manager->getById($data['role_id']))
-                ;
-                if ($pass){
-                    $class->setPass($data['pass']);
-                }
-                else {
-                    $class->setPass('');
-                }
-            }
-        }
-        return $class;
+        $request = DB::getInstance()->prepare("SELECT * FROM user where username = :username");
+        $request->bindValue(":username",$username);
+        return $this->getOne($request,true);
     }
 
     /**
@@ -155,5 +147,36 @@ class UserManager{
         $request = DB::getInstance()->prepare("DELETE FROM user WHERE id = :id");
         $request->bindValue(':id',$id);
         return $request->execute();
+    }
+
+    /**
+     * private request for the getBy
+     * @param $request
+     * @param bool $pass
+     * @return User
+     */
+    private function getOne($request ,bool $pass = false) : User {
+        $class = new User();
+        $result = $request->execute();
+
+        if ($result){
+            $data = $request->fetch();
+            if ($data) {
+                $manager = new RoleManager();
+
+                $class->setId($data['id'])
+                    ->setUsername($data['username'])
+                    ->setMail($data['mail'])
+                    ->setRole($manager->getById($data['role_id']))
+                ;
+                if ($pass){
+                    $class->setPass($data['pass']);
+                }
+                else {
+                    $class->setPass('');
+                }
+            }
+        }
+        return $class;
     }
 }

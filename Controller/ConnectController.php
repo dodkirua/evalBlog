@@ -3,12 +3,20 @@
 
 namespace Controller;
 
-use dev\functionDev;
+require_once '../dev/functionDev.php';
+
+use \Model\Manager\UserManager;
 
 
-$dev = new functionDev();
 
+if (isset($_POST['username']) && isset($_POST['pass'])){
+    $manager = new UserManager();
 
-if (isset($_POST)){
-    $dev->pre($_POST);
+    $username = mb_strtolower($_POST['username']);
+    $pass = $_POST['pass'];
+    $user = $manager->getByUsername($username);
+
+}
+else {
+    echo "pas de POST";
 }
