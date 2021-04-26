@@ -1,5 +1,5 @@
 <?php
-namespace App\Classes\Entity;
+namespace Model;
 
 use PDO;
 use PDOException;
@@ -19,7 +19,6 @@ class DB{
         else {
             require_once $_SERVER['DOCUMENT_ROOT'] . "/conf.php";
         }
-        $dsn = "";
         /**
          * @var String $host
          * @var String $db
