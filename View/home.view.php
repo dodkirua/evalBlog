@@ -1,18 +1,20 @@
-<div>
-    <header>
-        <h1>EvalBlog</h1>
-    </header>
-    <div>
-        <nav>
 
+<header>
+    <h1>EvalBlog</h1>
+    <div class="connect"><a href="index.php?controller=connect">Connectez vous</a></div>
+</header>
+<div class="principal">
+        <nav class="menu">
+    
         </nav>
-    </div>
-   <div>
-       <section>
-           <div>
+    
+    <div>
+       <section class="sectionArticle">
+           <div class="article">
                <div class="title">
                    <?= $var['title'] ?>
                </div>
+               <div class="user">publié par <?= $var['user'] ?> le : <?= $var['date'] ?></div>
                <?php if (!is_null($var['image'])){
                    echo "<img src='" . $var['image'] . "' alt='" . $var['title'] . "'>";
                }
@@ -22,7 +24,7 @@
                </div>
            </div>
        </section>
-       <section>
+       <section class="sectionComment">
            <?php
                 foreach ($var['comment'] as $item){
                     echo "
@@ -38,10 +40,11 @@
                 }
            ?>
        </section>
-
-   </div>
-    <footer>
-
-    </footer>
-
+    
+    </div>
 </div>
+<footer>
+
+</footer>
+
+

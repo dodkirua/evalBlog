@@ -3,7 +3,7 @@ session_start();
 
 require_once 'import.php';
 
-use Controller\Classes\HomeController;
+use Controller\Classes\PageController;
 
 if(isset($_GET['controller'])) {
     //with parameter controller
@@ -12,13 +12,16 @@ if(isset($_GET['controller'])) {
             switch ($_GET['action']){
                 case 'connect':
 
-                    break;
                 default :
                     break;
             }
             break;
         case 'passForgot' :
             pre("pass oublié");
+            break;
+        case 'connect' :
+            $controller = new PageController();
+            $controller->connectPage();
             break;
         case 'e':
             switch ($_GET['e']){
@@ -33,7 +36,7 @@ if(isset($_GET['controller'])) {
     }
 }
 else {
-    $controller = new HomeController();
+    $controller = new PageController();
 
     $controller->homePage();
 }

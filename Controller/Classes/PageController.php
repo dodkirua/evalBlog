@@ -8,28 +8,32 @@ use Model\Manager\ArticleManager;
 use Model\Manager\CommentManager;
 use Model\Entity\Comment;
 
-class HomeController{
+class PageController{
 
     use BaseViewTrait;
 
     public function homePage(){
+        $date = new \DateTime();
+
         $articleManager = new ArticleManager();
         $article = $articleManager->getLast();
         $commentManager = new CommentManager();
         $comment = $commentManager->getAllByArticle($article->getId());
+        $date->setTimestamp(intval($article->getDate()));
         $var['title'] = $article->getTitle();
         $var['content'] = $article->getContent();
         $var['image'] = $article->getImage();
-        $var['date'] = $article->getDate();
+        $var['date'] = $date->format("d/m/Y \à H\hi");
         $var['user'] = $article->getUser()->getUsername();
-
-
+        $i = 0;
         foreach ($comment as $com){
-
-            $var['comment']['user'] = $com->getUser()->getUsername();
-            $var['comment']['date'] = $com->getDate();
-            $var['comment']['content'] = $com->getContent();
+            $date->setTimestamp(intval($com->getDate()));
+            $var['comment'][$i]['user'] = $com->getUser()->getUsername();
+            $var['comment'][$i]['date'] = $date->format("d/m/Y \à H\hi");
+            $var['comment'][$i]['content'] = $com->getContent();
+            $i++;
         }
+
         $this->render('home',"Page d'accueil",$var);
     }
 

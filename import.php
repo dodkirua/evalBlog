@@ -14,7 +14,7 @@ require_once './Model/Manager/UserManager.php';
 require_once './Model/Manager/CommentManager.php';
 require_once './Model/Manager/ArticleManager.php';
 
-require_once './Controller/Classes/HomeController.php';
+require_once './Controller/Classes/PageController.php';
 
 
 
