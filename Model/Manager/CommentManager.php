@@ -60,7 +60,7 @@ class CommentManager{
      */
     public function getAllByUser(int $userId): array    {
         $request = DB::getInstance()->prepare("SELECT * FROM comment WHERE user_id = :user");
-        $request->bindValue(":user_id",$userId);
+        $request->bindValue(":user",$userId);
         return $this->getTmp($request);
     }
 
@@ -70,8 +70,8 @@ class CommentManager{
      * @return array
      */
     public function getAllByArticle(int $articleId): array    {
-        $request = DB::getInstance()->prepare("SELECT * FROM comment WHERE user_id = :user");
-        $request->bindValue(":user_id",$articleId);
+        $request = DB::getInstance()->prepare("SELECT * FROM comment WHERE article_id = :article");
+        $request->bindValue(":article",$articleId);
         return $this->getTmp($request);
     }
 
@@ -158,11 +158,15 @@ class CommentManager{
         if ($result){
             $data = $request->fetchAll();
             if ($data) {
+
                 foreach ($data as $item) {
                     $articleManager = new ArticleManager();
                     $userManager = new UserManager();
+                    $article = $articleManager->getById(intval($item['article_id']));
 
-                    $class = new Comment(intval($item['id']), $item['content'], $item['date'], $articleManager->getById($data['article_id']), $userManager->getById($data['user_id']));
+                    $user = $userManager->getById(intval($item['user_id']));
+
+                    $class = new Comment(intval($item['id']), $item['content'], $item['date'], $article , $user );
                     $classes[] = $class;
                 }
             }

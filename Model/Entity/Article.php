@@ -7,7 +7,7 @@ namespace Model\Entity;
 class Article{
     private ?int $id;
     private ?string $title;
-    private ?int $content;
+    private ?string $content;
     private ?int $date;
     private ?string $image;
     private ?User $user;
@@ -16,11 +16,12 @@ class Article{
      * Article constructor.
      * @param int|null $id
      * @param string|null $title
-     * @param int|null $content
+     * @param string|null $content
      * @param int|null $date
+     * @param string|null $image
      * @param User|null $user
      */
-    public function __construct(int $id = null, string $title = null, int $content  = null, int $date = null,string $image = null, User $user = null )    {
+    public function __construct(int $id = null, string $title = null, string $content  = null, int $date = null,string $image = null, User $user = null )    {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
@@ -67,18 +68,18 @@ class Article{
 
     /**
      * get the Content
-     * @return int
+     * @return string
      */
-    public function getContent(): int    {
+    public function getContent(): string    {
         return $this->content;
     }
 
     /**
      * set the Content
-     * @param int $content
+     * @param string $content
      * @return Article
      */
-    public function setContent(int $content): Article    {
+    public function setContent(string $content): Article    {
         $this->content = $content;
         return $this;
     }

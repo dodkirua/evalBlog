@@ -27,7 +27,7 @@ class DB{
          * @var String $pass
          */
         if (is_null($host) || is_null($db) || is_null($user)){
-            self::$arrayError[] = "Il manque une variable de connection.";
+            self::$arrayError[] = "Il manque au moins une variable de connection.";
         }
         else {
             if (is_null($port)){

@@ -19,27 +19,17 @@ class ArticleManager
      * @param int $id
      * @return Article
      */
-    public function getById(int $id): Article
-    {
-        $class = new Article();
+    public function getById(int $id): Article    {
+
         $request = DB::getInstance()->prepare("SELECT * FROM article where id = :id");
         $request->bindValue(":id", $id);
-        $result = $request->execute();
+        return $this->getOneTmp($request);
+    }
 
-        if ($result) {
-            $data = $request->fetch();
-            if ($data) {
-                $manager = new UserManager();
+    public function getLast() : Article{
 
-                $class->setId($id)
-                    ->setTitle($data['title'])
-                    ->setContent($data['content'])
-                    ->setDate($data['date'])
-                    ->setImage($data['image'])
-                    ->setUser($manager->getById($data['user_id']));
-            }
-        }
-        return $class;
+        $request = DB::getInstance()->prepare("SELECT * FROM article where id = (SELECT MAX(id) from article)");
+        return $this->getOneTmp($request);
     }
 
     /**
@@ -147,8 +137,7 @@ class ArticleManager
      * @param $request
      * @return array
      */
-    private function getTmp($request): array
-    {
+    private function getTmp($request): array    {
         $classes = [];
         $result = $request->execute();
 
@@ -164,5 +153,30 @@ class ArticleManager
             }
         }
         return $classes;
+    }
+
+    /**
+     * return a Article for the get function for one return
+     * @param $request
+     * @return Article
+     */
+    private function getOneTmp($request) : Article{
+        $class = new Article();
+        $result = $request->execute();
+
+        if ($result) {
+            $data = $request->fetch();
+            if ($data) {
+                $manager = new UserManager();
+
+                $class->setId($data['id'])
+                    ->setTitle($data['title'])
+                    ->setContent($data['content'])
+                    ->setDate($data['date'])
+                    ->setImage($data['image'])
+                    ->setUser($manager->getById($data['user_id']));
+            }
+        }
+        return $class;
     }
 }
