@@ -8,6 +8,7 @@ use Model\Entity\Article;
 use Model\Manager\UserManager;
 use Model\Entity\User;
 
+
 class ArticleManager extends Manager {
 
     /**
@@ -97,7 +98,6 @@ class ArticleManager extends Manager {
      */
     public function add(string $content, int $userId, string $image = null, string $title = null): bool
     {
-        $date = new DateTime();
         $request = DB::getInstance()->prepare("INSERT INTO article 
                     (title, content, date, image, user_id)
                     VALUES (:title, :content, :date, :img, :user)
@@ -105,7 +105,7 @@ class ArticleManager extends Manager {
         $request->bindValue(":title", mb_strtolower($title));
         $request->bindValue(":content", mb_strtolower($content));
         $request->bindValue(":img", mb_strtolower($image));
-        $request->bindValue(":date", $date->getTimestamp());
+        $request->bindValue(":date", (new DateTime())->getTimestamp());
         $request->bindValue(":user", $userId);
 
         return $request->execute();
@@ -141,9 +141,7 @@ class ArticleManager extends Manager {
             $data = $request->fetchAll();
             if ($data) {
                 foreach ($data as $item) {
-                    $manager = new RoleManager();
-
-                    $class = new Article(intval($item['id']), $item['title'], $item['content'], $item['date'], $item['image'], $manager->getById($data['role_id']));
+                    $class = new Article(intval($item['id']), $item['title'], $item['content'], $item['date'], $item['image'], (new UserManager())->getById(intval($data['user_id'])));
                     $classes[] = $class;
                 }
             }
@@ -163,14 +161,12 @@ class ArticleManager extends Manager {
         if ($result) {
             $data = $request->fetch();
             if ($data) {
-                $manager = new UserManager();
-
                 $class->setId($data['id'])
                     ->setTitle($data['title'])
                     ->setContent($data['content'])
                     ->setDate($data['date'])
                     ->setImage($data['image'])
-                    ->setUser($manager->getById($data['user_id']));
+                    ->setUser((new UserManager())->getById($data['user_id']));
             }
         }
         return $class;

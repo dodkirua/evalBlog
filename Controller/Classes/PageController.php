@@ -5,40 +5,45 @@ namespace Controller\Classes;
 
 
 use DateTime;
+use dev\Dev;
 use Model\Manager\ArticleManager;
 use Model\Manager\CommentManager;
-use Model\Entity\Comment;
+use Model\Utility\Utility;
+
 
 class PageController extends Controller {
 
-
-
-    public function homePage(){
+    public static function homePage(){
         $date = new DateTime();
 
-        $articleManager = new ArticleManager();
-        $article = $articleManager->getLast();
-        $commentManager = new CommentManager();
-        $comment = $commentManager->getAllByArticle($article->getId());
-        $date->setTimestamp($article->getDate());
-        $var['title'] = $article->getTitle();
-        $var['content'] = $article->getContent();
-        $var['image'] = $article->getImage();
-        $var['date'] = $date->format("d/m/Y \à H\hi");
-        $var['user'] = $article->getUser()->getUsername();
-        $i = 0;
+        /*$article = (new ArticleManager())->getLast()->getAll();
+        Dev::pre($article);
+        /*$comment = (new CommentManager())->getAllByArticle($article['id']);
+        /*$date->setTimestamp($article['date']);
+        $article['date'] = $date->format("d/m/Y \à H\hi");
+        $article['user'] = $article['user']->getUsername();
         foreach ($comment as $com){
+            $tab = $com->getAll();
             $date->setTimestamp(intval($com->getDate()));
-            $var['comment'][$i]['user'] = $com->getUser()->getUsername();
-            $var['comment'][$i]['date'] = $date->format("d/m/Y \à H\hi");
-            $var['comment'][$i]['content'] = $com->getContent();
-            $i++;
-        }
+            $tab['date'] = $date->format("d/m/Y \à H\hi");
+            $article['comment'][] = $tab;
 
-        self::render('home',"Page d'accueil",$var);
+        }*/
+
+        self::render('home',"Page d'accueil");
     }
 
-    public function connectPage() {
+    /**
+     * Display connect page
+     */
+    public static function connectPage() {
        self::render('connect','Page de connection');
+    }
+
+    /**
+     * display the registration page
+     */
+    public static function registrationPage(){
+        self::render('registration','Enregistrez vous');
     }
 }

@@ -102,12 +102,12 @@ class User extends Entity implements EntityInterface {
      * return the value in array less pass for security
      * @return array
      */
-    public function getAll() : array {
+    public function getAllData() : array {
         $array['id'] = $this->getId();
         $array['username'] = $this->getUsername();
         $array['mail'] = $this->getMail();
         $array['pass'] = '';
-        return $array['role'] = $this->getRole()->getAll();
+        return $array['role'] = $this->getRole()->getAllData();
     }
 
 }

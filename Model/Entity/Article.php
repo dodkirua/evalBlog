@@ -126,12 +126,12 @@ class Article extends Entity implements EntityInterface {
      * return the value in array
      * @return array
      */
-    public function getAll() : array {
+    public function getAllData() : array {
         $array['id'] = $this->getId();
         $array['title'] = $this->getTitle();
         $array['content'] = $this->getContent();
         $array['date'] = $this->getDate();
         $array['image'] = $this->getImage();
-        return $array['user'] = $this->getUser()->getAll();
+        return $array['user'] = $this->getUser()->getAllData();
     }
 }

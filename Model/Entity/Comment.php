@@ -104,10 +104,10 @@ class Comment extends Entity implements EntityInterface {
      * return the value in array
      * @return array
      */
-    public function getAll() : array {
+    public function getAllData() : array {
         $array['id'] = $this->getId();
         $array['content'] = $this->getContent();
-        $array['article'] = $this->getArticle()->getAll();
-        return $array['user'] = $this->getUser()->getAll();
+        $array['article'] = $this->getArticle()->getAllData();
+        return $array['user'] = $this->getUser()->getAllData();
     }
 }

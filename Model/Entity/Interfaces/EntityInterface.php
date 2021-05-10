@@ -2,5 +2,5 @@
 namespace Model\Entity\Interfaces;
 
 interface EntityInterface{
-    public function getAll() :array;
+    public function getAllData() :array;
 }

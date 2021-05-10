@@ -24,7 +24,7 @@ class ConnectController extends Controller {
             $pass = $_POST['pass'];
             $user = (new UserManager())->getByUsername($username);
             if (password_verify($pass,$user->getPass())){
-                Utility::addToSession($user->getAll());
+                Utility::addToSession($user->getAllData());
                 return 1;
             }
             else {

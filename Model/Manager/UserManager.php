@@ -7,6 +7,7 @@ use Model\Entity\Role;
 use Model\Manager\RoleManager;
 use Model\Entity\User;
 
+
 class UserManager extends Manager {
 
     /**
@@ -47,9 +48,7 @@ class UserManager extends Manager {
             $data = $request->fetchAll();
             if ($data) {
                 foreach ($data as $item) {
-                    $manager = new RoleManager();
-
-                    $class = new User(intval($item['id']),$item['username'],$item['mail'],'',$manager->getById($data['role_id']));
+                    $class = new User(intval($item['id']),$item['username'],$item['mail'],'',(new RoleManager())->getById($data['role_id']));
                     $classes[] = $class;
                 }
             }
@@ -164,12 +163,10 @@ class UserManager extends Manager {
         if ($result){
             $data = $request->fetch();
             if ($data) {
-                $manager = new RoleManager();
-
                 $class->setId($data['id'])
                     ->setUsername($data['username'])
                     ->setMail($data['mail'])
-                    ->setRole($manager->getById($data['role_id']))
+                    ->setRole((new RoleManager())->getById($data['role_id']))
                 ;
                 if ($pass){
                     $class->setPass($data['pass']);

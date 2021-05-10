@@ -27,14 +27,12 @@ class CommentManager extends Manager {
         if ($result){
             $data = $request->fetch();
             if ($data) {
-                $articleManager = new ArticleManager();
-                $userManager = new UserManager();
 
                 $class->setId($id)
                     ->setContent($data['content'])
                     ->setDate($data['date'])
-                    ->setArticle($articleManager->getById($data['article_id']))
-                    ->setUser($userManager->getById($data['user_id']))
+                    ->setArticle((new ArticleManager())->getById($data['article_id']))
+                    ->setUser((new UserManager())->getById($data['user_id']))
                 ;
 
             }
@@ -120,7 +118,6 @@ class CommentManager extends Manager {
      * @return bool
      */
     public function add(string $content , int $articleId , int $userId) : bool {
-        $date = new DateTime();
         $request = DB::getInstance()->prepare("INSERT INTO comment 
                     (content, date, article_id, user_id)
                     VALUES (:content, :date, :article, :user)
@@ -128,7 +125,7 @@ class CommentManager extends Manager {
         $request->bindValue(":username",mb_strtolower($content));
         $request->bindValue(":article",$articleId);
         $request->bindValue(":user",$userId);
-        $request->bindValue(':date',$date->getTimestamp());
+        $request->bindValue(':date',(new DateTime())->getTimestamp());
 
         return $request->execute();
     }
@@ -158,11 +155,8 @@ class CommentManager extends Manager {
             if ($data) {
 
                 foreach ($data as $item) {
-                    $articleManager = new ArticleManager();
-                    $userManager = new UserManager();
-                    $article = $articleManager->getById(intval($item['article_id']));
-
-                    $user = $userManager->getById(intval($item['user_id']));
+                    $article = (new ArticleManager())->getById(intval($item['article_id']));
+                    $user = (new UserManager())->getById(intval($item['user_id']));
 
                     $class = new Comment(intval($item['id']), $item['content'], $item['date'], $article , $user );
                     $classes[] = $class;

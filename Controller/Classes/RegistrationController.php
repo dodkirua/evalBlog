@@ -8,12 +8,6 @@ use Model\Manager\UserManager;
 use Model\Utility\Security;
 
 class RegistrationController extends Controller{
-    /**
-     * display the registration page
-     */
-    public function display(){
-        $this->render('registration','Enregistrez vous');
-    }
 
     /**
      * verification and add to DB
@@ -26,7 +20,7 @@ class RegistrationController extends Controller{
      * -5 : $_POST problem
      * @return int
      */
-    public function registration() : int{
+    public static function registration() : int{
         if (isset($_POST['username']) && isset($_POST['pass']) && isset($_POST['passVerify']) ){
             $username = Security::sanitize($_POST['username']);
             $pass = Security::checkPass(Security::sanitize($_POST['pass']));
