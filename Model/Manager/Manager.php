@@ -6,7 +6,7 @@ namespace Model\Manager;
 
 class Manager{
 
-    private static $manager = null;
+    private static ?self $manager = null;
 
     /**
      * get the Manager

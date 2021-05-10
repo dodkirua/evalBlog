@@ -1,17 +1,20 @@
-<div>
-    <h1>Bienvenue sur EvalBlog</h1>
-    <h3>Veuillez vous connecter</h3>
 
-    <div>
-        <form action="/index.php?controller=form&action=connect" id="connect" method="post" class="form">
+<div class="chat">
+    <h1>Connection</h1>
+    <form action="/index.php?ctrl=form&action=connect" method="post">
+
+        <div class="form">
             <label for="username">Username</label>
-            <input type="text" id="username" name="username">
-            <label for="pass">Password</label>
-            <input type="password" id="pass" name="pass">
-            <input type="submit" value="Valider">
-        </form>
-        <div>
-            <a href="/index.php?controller=passForgot">mot de passe oublié?</a>
+            <input type="text" name="username" id="username">
         </div>
-    </div>
+        <div class="form">
+            <label for="pass">PassWord</label>
+            <input type="password" name="pass" id="pass">
+        </div>
+        <input type="submit" value="Valider">
+        <div class="link">
+            <a href="/index.php?ctrl=registration">Créer un compte</a>
+            <a href="/index.php?ctrl=passforgot">Mot de passe oublié?</a>
+        </div>
+    </form>
 </div>

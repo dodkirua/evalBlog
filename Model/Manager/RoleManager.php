@@ -76,7 +76,7 @@ class RoleManager extends Manager {
      * @param string $name
      * @return bool
      */
-    public function insert(string $name) : bool {
+    public function add(string $name) : bool {
         $request = DB::getInstance()->prepare("INSERT INTO role 
                     (name)
                     VALUES (:name)

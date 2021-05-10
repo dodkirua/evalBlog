@@ -7,13 +7,11 @@ use Model\DB;
 use Model\Entity\Comment;
 use Model\Manager\ArticleManager;
 use Model\Manager\UserManager;
-use Model\Manager\Traits\ManagerTrait;
 use Model\Entity\User;
 use Model\Entity\Article;
 
-class CommentManager{
+class CommentManager extends Manager {
 
-    use ManagerTrait;
 
     /**
      * return a comment by id
@@ -121,7 +119,7 @@ class CommentManager{
      * @param int $userId
      * @return bool
      */
-    public function insert(string $content , int $articleId , int $userId) : bool {
+    public function add(string $content , int $articleId , int $userId) : bool {
         $date = new DateTime();
         $request = DB::getInstance()->prepare("INSERT INTO comment 
                     (content, date, article_id, user_id)

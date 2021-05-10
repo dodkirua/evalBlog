@@ -5,12 +5,9 @@ namespace Model\Manager;
 use Model\DB;
 use Model\Entity\Role;
 use Model\Manager\RoleManager;
-use Model\Manager\Traits\ManagerTrait;
 use Model\Entity\User;
 
-class UserManager{
-
-    use ManagerTrait;
+class UserManager extends Manager {
 
     /**
      * return a User by id
@@ -108,18 +105,23 @@ class UserManager{
     /**
      * insert data in DB
      * @param string $username
-     * @param string $mail
      * @param string $pass
+     * @param string|null $mail
      * @param int $roleId
      * @return bool
      */
-    public function insert(string $username, string $mail,string $pass,int $roleId) : bool {
+    public function add(string $username, string $pass, string $mail = null, int $roleId = 1) : bool {
         $request = DB::getInstance()->prepare("INSERT INTO user 
                     (username, mail, pass, role_id)
                     VALUES (:username, :mail, :pass, :role)
                     ");
         $request->bindValue(":username",mb_strtolower($username));
-        $request->bindValue(":mail",mb_strtolower($mail));
+        if (is_null($mail)){
+            $request->bindValue(":mail",null);
+        }
+        else {
+            $request->bindValue(":mail",mb_strtolower($mail));
+        }
         $request->bindValue(":pass",$pass);
         $request->bindValue(":role",$roleId);
         return $request->execute();

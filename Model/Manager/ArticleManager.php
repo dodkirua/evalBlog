@@ -6,13 +6,9 @@ use DateTime;
 use Model\DB;
 use Model\Entity\Article;
 use Model\Manager\UserManager;
-use Model\Manager\Traits\ManagerTrait;
 use Model\Entity\User;
 
-class ArticleManager
-{
-
-    use ManagerTrait;
+class ArticleManager extends Manager {
 
     /**
      * return a Article by id
@@ -99,7 +95,7 @@ class ArticleManager
      * @param string|null $title
      * @return bool
      */
-    public function insert(string $content, int $userId, string $image = null, string $title = null): bool
+    public function add(string $content, int $userId, string $image = null, string $title = null): bool
     {
         $date = new DateTime();
         $request = DB::getInstance()->prepare("INSERT INTO article 

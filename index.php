@@ -3,6 +3,7 @@ session_start();
 
 require_once 'import.php';
 
+use Controller\Classes\ConnectController;
 use Controller\Classes\PageController;
 
 if(isset($_GET['controller'])) {
@@ -11,7 +12,7 @@ if(isset($_GET['controller'])) {
         case 'form'  :
             switch ($_GET['action']){
                 case 'connect':
-
+                    ConnectController::render();
                 default :
                     break;
             }
