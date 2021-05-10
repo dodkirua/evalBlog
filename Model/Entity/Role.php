@@ -33,5 +33,14 @@ class Role extends Entity {
         return $this;
     }
 
+    /**
+     * return the value in array
+     * @return array
+     */
+    public function getAll() : array   {
+        $array['id'] = $this->getId();
+        return $array['name'] = $this->getAll();
+    }
+
 
 }

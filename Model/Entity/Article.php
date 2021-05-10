@@ -30,8 +30,6 @@ class Article extends Entity {
         $this->user = $user;
     }
 
-
-
     /**
      * get the Title
      * @return string|null
@@ -122,4 +120,16 @@ class Article extends Entity {
         return $this;
     }
 
+    /**
+     * return the value in array
+     * @return array
+     */
+    public function getAll() : array {
+        $array['id'] = $this->getId();
+        $array['title'] = $this->getTitle();
+        $array['content'] = $this->getContent();
+        $array['date'] = $this->getDate();
+        $array['image'] = $this->getImage();
+        return $array['user'] = $this->getUser()->getAll();
+    }
 }

@@ -97,4 +97,15 @@ class Comment extends Entity {
         $this->article = $article;
         return $this;
     }
+
+    /**
+     * return the value in array
+     * @return array
+     */
+    public function getAll() : array {
+        $array['id'] = $this->getId();
+        $array['content'] = $this->getContent();
+        $array['article'] = $this->getArticle()->getAll();
+        return $array['user'] = $this->getUser()->getAll();
+    }
 }

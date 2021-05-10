@@ -96,5 +96,16 @@ class User extends Entity {
         return $this;
     }
 
+    /**
+     * return the value in array less pass for security
+     * @return array
+     */
+    public function getAll() : array {
+        $array['id'] = $this->getId();
+        $array['username'] = $this->getUsername();
+        $array['mail'] = $this->getMail();
+        $array['pass'] = '';
+        return $array['role'] = $this->getRole()->getAll();
+    }
 
 }

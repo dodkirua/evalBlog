@@ -6,7 +6,6 @@ namespace Controller\Classes;
 use Model\Entity\User;
 use Model\Manager\UserManager;
 
-require_once '../../dev/functionDev.php';
 
 
 class ConnectController extends Controller {
