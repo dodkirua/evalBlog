@@ -4,8 +4,7 @@
 namespace Model\Entity;
 
 
-class Comment{
-    private ?int $id;
+class Comment extends Entity {
     private ?string $content;
     private ?int $date;
     private ?User $user;
@@ -20,29 +19,11 @@ class Comment{
      * @param User|null $user
      */
     public function __construct(int $id = null, string $content = null, int $date = null,Article $article = null, User $user = null)    {
-        $this->id = $id;
+        parent::__construct($id);
         $this->content = $content;
         $this->date = $date;
         $this->article = $article;
         $this->user = $user;
-    }
-
-    /**
-     * return the id
-     * @return int|null
-     */
-    public function getId(): ?int    {
-        return $this->id;
-    }
-
-    /**
-     * set the id
-     * @param int|null $id
-     * @return Comment
-     */
-    public function setId(?int $id): Comment    {
-        $this->id = $id;
-        return $this;
     }
 
     /**

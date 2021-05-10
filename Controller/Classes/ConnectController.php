@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Controller;
+namespace Controller\Classes;
 
 use Model\Entity\User;
 use Model\Manager\UserManager;
@@ -9,9 +9,9 @@ use Model\Manager\UserManager;
 require_once '../../dev/functionDev.php';
 
 
-class ConnectController {
+class ConnectController extends Controller {
 
-    public function connection() : void{
+    public static function connection() : void{
         if (isset($_POST['username']) && isset($_POST['pass'])){
             $manager = new UserManager();
 
@@ -22,11 +22,11 @@ class ConnectController {
 
             }
             else {
-                header("/index.php?e=1");
+
             }
         }
         else {
-            header("/index.php?e=0");
+
         }
     }
 }

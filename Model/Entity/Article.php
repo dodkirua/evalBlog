@@ -4,8 +4,8 @@
 namespace Model\Entity;
 
 
-class Article{
-    private ?int $id;
+class Article extends Entity {
+
     private ?string $title;
     private ?string $content;
     private ?int $date;
@@ -22,7 +22,7 @@ class Article{
      * @param User|null $user
      */
     public function __construct(int $id = null, string $title = null, string $content  = null, int $date = null,string $image = null, User $user = null )    {
-        $this->id = $id;
+        parent::__construct($id);
         $this->title = $title;
         $this->content = $content;
         $this->date = $date;
@@ -30,23 +30,7 @@ class Article{
         $this->user = $user;
     }
 
-    /**
-     * get the Id
-     * @return int|null
-     */
-    public function getId(): ?int    {
-        return $this->id;
-    }
 
-    /**
-     * set the Id
-     * @param int|null $id
-     * @return Article
-     */
-    public function setId(?int $id): Article    {
-        $this->id = $id;
-        return $this;
-    }
 
     /**
      * get the Title

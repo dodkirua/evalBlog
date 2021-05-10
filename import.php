@@ -1,8 +1,8 @@
 <?php
 
 require_once './Model/DB.php';
-require_once './Model/Manager/Traits/ManagerTrait.php';
-require_once './Controller/Traits/BaseViewTrait.php';
+require_once './Model/Manager/Traits/Manager.php';
+require_once './Controller/Traits/Controller.php';
 
 require_once './Model/Entity/Role.php';
 require_once './Model/Entity/User.php';

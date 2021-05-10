@@ -3,12 +3,10 @@
 namespace Model\Manager;
 
 use Model\DB;
-use Model\Manager\Traits\ManagerTrait;
 use Model\Entity\Role;
 
-class RoleManager{
+class RoleManager extends Manager {
 
-    use ManagerTrait;
 
     /**
      * return a Role by id

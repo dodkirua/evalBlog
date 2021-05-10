@@ -3,14 +3,11 @@
 
 namespace Controller\Classes;
 
-use Controller\Traits\BaseViewTrait;
+
+class BlogController extends Controller {
 
 
-class BlogController{
-
-    use BaseViewTrait;
-
-    public function connectPage() {
-        $this->render('connect','Page de connection');
+    public static function connectPage() {
+        self::render('connect','Page de connection');
     }
 }

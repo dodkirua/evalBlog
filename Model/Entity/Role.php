@@ -2,9 +2,7 @@
 
 namespace Model\Entity;
 
-class Role
-{
-    private ?int $id;
+class Role extends Entity {
     private ?string $name;
 
     /**
@@ -13,26 +11,8 @@ class Role
      * @param int|null $id
      */
     public function __construct( int $id = null, string $name = null)    {
-        $this->id = $id;
+        parent::__construct($id);
         $this->name = $name;
-    }
-
-    /**
-     * return the id
-     * @return int|null
-     */
-    public function getId(): ?int    {
-        return $this->id;
-    }
-
-    /**
-     * set the id
-     * @param int $id
-     * @return Role
-     */
-    public function setId(int $id): Role    {
-        $this->id = $id;
-        return $this;
     }
 
     /**

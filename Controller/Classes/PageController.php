@@ -3,23 +3,24 @@
 
 namespace Controller\Classes;
 
-use Controller\Traits\BaseViewTrait;
+
+use DateTime;
 use Model\Manager\ArticleManager;
 use Model\Manager\CommentManager;
 use Model\Entity\Comment;
 
-class PageController{
+class PageController extends Controller {
 
-    use BaseViewTrait;
+
 
     public function homePage(){
-        $date = new \DateTime();
+        $date = new DateTime();
 
         $articleManager = new ArticleManager();
         $article = $articleManager->getLast();
         $commentManager = new CommentManager();
         $comment = $commentManager->getAllByArticle($article->getId());
-        $date->setTimestamp(intval($article->getDate()));
+        $date->setTimestamp($article->getDate());
         $var['title'] = $article->getTitle();
         $var['content'] = $article->getContent();
         $var['image'] = $article->getImage();
@@ -34,10 +35,10 @@ class PageController{
             $i++;
         }
 
-        $this->render('home',"Page d'accueil",$var);
+        self::render('home',"Page d'accueil",$var);
     }
 
     public function connectPage() {
-        $this->render('connect','Page de connection');
+       self::render('connect','Page de connection');
     }
 }

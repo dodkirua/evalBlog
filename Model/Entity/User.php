@@ -2,8 +2,7 @@
 
 namespace Model\Entity;
 
-class User{
-    private ?int $id;
+class User extends Entity {
     private ?string $username;
     private ?string $mail;
     private ?string $pass;
@@ -18,29 +17,11 @@ class User{
      * @param int|null $id
      */
     public function __construct( int $id = null, string $username = null, string $mail = null, string $pass = null, Role $role = null)    {
-        $this->id = $id;
+        parent::__construct($id);
         $this->username = $username;
         $this->mail = $mail;
         $this->pass = $pass;
         $this->role = $role;
-    }
-
-    /**
-     * get the Id
-     * @return int|null
-     */
-    public function getId(): ?int    {
-        return $this->id;
-    }
-
-    /**
-     * set the Id
-     * @param int|null $id
-     * @return User
-     */
-    public function setId(?int $id): User    {
-        $this->id = $id;
-        return $this;
     }
 
     /**

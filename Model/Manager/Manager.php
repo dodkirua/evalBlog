@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Model\Manager\Traits;
+namespace Model\Manager;
 
 
-trait ManagerTrait{
+class Manager{
 
     private static $manager = null;
 
@@ -18,4 +18,6 @@ trait ManagerTrait{
         }
         return self::$manager;
     }
+
+
 }
