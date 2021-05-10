@@ -4,7 +4,9 @@
 namespace Model\Entity;
 
 
-class Article extends Entity {
+use Model\Entity\Interfaces\EntityInterface;
+
+class Article extends Entity implements EntityInterface {
 
     private ?string $title;
     private ?string $content;

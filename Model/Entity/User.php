@@ -2,7 +2,9 @@
 
 namespace Model\Entity;
 
-class User extends Entity {
+use Model\Entity\Interfaces\EntityInterface;
+
+class User extends Entity implements EntityInterface {
     private ?string $username;
     private ?string $mail;
     private ?string $pass;

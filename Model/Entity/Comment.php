@@ -4,7 +4,9 @@
 namespace Model\Entity;
 
 
-class Comment extends Entity {
+use Model\Entity\Interfaces\EntityInterface;
+
+class Comment extends Entity implements EntityInterface {
     private ?string $content;
     private ?int $date;
     private ?User $user;

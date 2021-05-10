@@ -2,7 +2,9 @@
 
 namespace Model\Entity;
 
-class Role extends Entity {
+use Model\Entity\Interfaces\EntityInterface;
+
+class Role extends Entity implements EntityInterface {
     private ?string $name;
 
     /**
