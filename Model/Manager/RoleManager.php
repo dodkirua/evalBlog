@@ -11,10 +11,10 @@ class RoleManager extends Manager {
     /**
      * return a Role by id
      * @param int $id
-     * @return Role
+     * @return Role|null
      */
-    public function getById(int $id): Role {
-        $class = new Role();
+    public function getById(int $id): ?Role {
+
         $request = DB::getInstance()->prepare("SELECT * FROM role where id = :id");
         $request->bindValue(":id",$id);
         $result = $request->execute();
@@ -22,11 +22,10 @@ class RoleManager extends Manager {
         if ($result){
             $data = $request->fetch();
             if ($data) {
-                $class->setId($id);
-                $class->setName($data['name']);
+                return new Role($data['id'], $data['name']);
             }
         }
-        return $class;
+        return null;
     }
 
     /**

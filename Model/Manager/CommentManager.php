@@ -16,10 +16,9 @@ class CommentManager extends Manager {
     /**
      * return a comment by id
      * @param int $id
-     * @return Comment
+     * @return Comment|null
      */
-    public function getById(int $id): Comment {
-        $class = new Comment();
+    public function getById(int $id): ?Comment {
         $request = DB::getInstance()->prepare("SELECT * FROM comment where id = :id");
         $request->bindValue(":id",$id);
         $result = $request->execute();
@@ -27,17 +26,13 @@ class CommentManager extends Manager {
         if ($result){
             $data = $request->fetch();
             if ($data) {
+                $article = (new ArticleManager())->getById(intval($data['article_id']));
+                $user = (new UserManager())->getById(intval($data['user_id']));
 
-                $class->setId($id)
-                    ->setContent($data['content'])
-                    ->setDate($data['date'])
-                    ->setArticle((new ArticleManager())->getById($data['article_id']))
-                    ->setUser((new UserManager())->getById($data['user_id']))
-                ;
-
+                return new Comment(intval($data['id']), $data['content'],intval($data['date']),$article, $user );
             }
         }
-        return $class;
+        return null;
     }
 
     /**
