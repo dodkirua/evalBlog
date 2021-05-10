@@ -40,8 +40,10 @@ class Role extends Entity implements EntityInterface {
      * @return array
      */
     public function getAllData() : array   {
+        $array = [];
         $array['id'] = $this->getId();
-        return $array['name'] = $this->getAllData();
+        $array['name'] = $this->getName();
+        return $array;
     }
 
 

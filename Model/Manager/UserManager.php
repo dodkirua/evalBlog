@@ -6,6 +6,7 @@ use Model\DB;
 use Model\Entity\Role;
 use Model\Manager\RoleManager;
 use Model\Entity\User;
+use PDOStatement;
 
 
 class UserManager extends Manager {
@@ -14,9 +15,9 @@ class UserManager extends Manager {
      * return a User by id
      * @param int $id
      * @param bool $pass
-     * @return User
+     * @return User|null
      */
-    public function getById(int $id,bool $pass = false): User {
+    public function getById(int $id,bool $pass = false): ?User {
 
         $request = DB::getInstance()->prepare("SELECT * FROM user where id = :id");
         $request->bindValue(":id",$id);
@@ -26,12 +27,12 @@ class UserManager extends Manager {
     /**
      * return User by username
      * @param string $username
-     * @return User
+     * @return User|null
      */
-    public function getByUsername(string $username): User {
+    public function getByUsername(string $username): ?User {
 
         $request = DB::getInstance()->prepare("SELECT * FROM user where username = :username");
-        $request->bindValue(":username",$username);
+        $request->bindValue(":username",mb_strtolower($username));
         return $this->getOne($request,true);
     }
 
@@ -152,30 +153,21 @@ class UserManager extends Manager {
 
     /**
      * private request for the getBy
-     * @param $request
+     * @param PDOStatement $request
      * @param bool $pass
-     * @return User
+     * @return User|null
      */
-    private function getOne($request ,bool $pass = false) : User {
-        $class = new User();
-        $result = $request->execute();
-
-        if ($result){
-            $data = $request->fetch();
-            if ($data) {
-                $class->setId($data['id'])
-                    ->setUsername($data['username'])
-                    ->setMail($data['mail'])
-                    ->setRole((new RoleManager())->getById($data['role_id']))
-                ;
-                if ($pass){
-                    $class->setPass($data['pass']);
-                }
-                else {
-                    $class->setPass('');
-                }
+    private function getOne(PDOStatement $request , bool $pass = false) : ?User {
+        $request->execute();
+        $data = $request->fetch();
+        if ($data) {
+            $pwd = "";
+            if ($pass){
+               $pwd = $data['pass'];
             }
+            return new User(intval($data['id']), $data['username'], $data['mail'],$pwd, (new RoleManager())->getById(intval($data['role_id'])));
         }
-        return $class;
+
+        return null;
     }
 }

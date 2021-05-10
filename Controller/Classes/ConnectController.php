@@ -20,6 +20,7 @@ class ConnectController extends Controller {
      */
     public static function connection() : int{
         if (isset($_POST['username']) && isset($_POST['pass'])){
+            echo '$Post ok';
             $username = mb_strtolower($_POST['username']);
             $pass = $_POST['pass'];
             $user = (new UserManager())->getByUsername($username);

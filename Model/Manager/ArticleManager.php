@@ -33,8 +33,7 @@ class ArticleManager extends Manager {
      * return a array with all the article
      * @return array
      */
-    public function getAll(): array
-    {
+    public function getAll(): array    {
         $request = DB::getInstance()->prepare("SELECT * FROM article");
         return $this->getTmp($request);
     }
@@ -44,10 +43,9 @@ class ArticleManager extends Manager {
      * @param int $userId
      * @return array
      */
-    public function getAllByUserId(int $userId): array
-    {
+    public function getAllByUserId(int $userId): array    {
         $request = DB::getInstance()->prepare("SELECT * FROM article WHERE user_id = :user");
-        $request->bindValue(":user_id", $userId);
+        $request->bindValue(":user", $userId);
         return $this->getTmp($request);
     }
 
@@ -60,8 +58,7 @@ class ArticleManager extends Manager {
      * @param int|null $userId
      * @return bool
      */
-    public function update(int $id, string $title = null, string $content = null, string $image = null, int $userId = null): bool
-    {
+    public function update(int $id, string $title = null, string $content = null, string $image = null, int $userId = null): bool    {
         // modify the not null values
         if (is_null($content) || is_null($userId)) {
             $data = $this->getById($id);
@@ -96,8 +93,7 @@ class ArticleManager extends Manager {
      * @param string|null $title
      * @return bool
      */
-    public function add(string $content, int $userId, string $image = null, string $title = null): bool
-    {
+    public function add(string $content, int $userId, string $image = null, string $title = null): bool    {
         $request = DB::getInstance()->prepare("INSERT INTO article 
                     (title, content, date, image, user_id)
                     VALUES (:title, :content, :date, :img, :user)

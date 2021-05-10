@@ -50,3 +50,11 @@ section {
     justify-content: space-around;
     border: lightgray 1px solid;
 }
+
+.colorRed {
+    color: red;
+}
+
+.colorGreen {
+    color: green;
+}

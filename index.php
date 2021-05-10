@@ -8,23 +8,31 @@ use Controller\Classes\PageController;
 use Controller\Classes\RegistrationController;
 use dev\Dev;
 
-if(isset($_GET['controller'])) {
+if(isset($_GET['ctrl'])) {
     //with parameter controller
-    switch ($_GET['controller']){
+    switch ($_GET['ctrl']){
         case 'form'  :
             switch ($_GET['action']){
                 case 'connect':
                     ConnectController::connection();
                     break;
                 case 'registration':
-                    RegistrationController::registration();
+
+                    $return = RegistrationController::registration();
+
+                    /* if ($return === 1){
+                       Dev::pre("enregistrement OK");
+                   }
+                   else{
+                       Dev::pre("enregistrement pas OK  code erreur : $return");
+                   }*/
                     break;
                 default :
                     break;
             }
             break;
-        case 'passForgot' :
-            echo Dev::pre("pass oublié");
+        case 'passforgot' :
+            Dev::pre("pass oublié");
             break;
         case 'connect' :
            PageController::connectPage();

@@ -107,7 +107,8 @@ class User extends Entity implements EntityInterface {
         $array['username'] = $this->getUsername();
         $array['mail'] = $this->getMail();
         $array['pass'] = '';
-        return $array['role'] = $this->getRole()->getAllData();
+        $array['role'] = $this->getRole()->getAllData();
+        return $array;
     }
 
 }

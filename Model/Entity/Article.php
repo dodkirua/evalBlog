@@ -3,7 +3,6 @@
 
 namespace Model\Entity;
 
-
 use Model\Entity\Interfaces\EntityInterface;
 
 class Article extends Entity implements EntityInterface {
@@ -132,6 +131,7 @@ class Article extends Entity implements EntityInterface {
         $array['content'] = $this->getContent();
         $array['date'] = $this->getDate();
         $array['image'] = $this->getImage();
-        return $array['user'] = $this->getUser()->getAllData();
+        $array['user'] = $this->getUser()->getAllData();
+        return $array;
     }
 }

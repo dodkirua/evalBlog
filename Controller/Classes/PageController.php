@@ -16,21 +16,20 @@ class PageController extends Controller {
     public static function homePage(){
         $date = new DateTime();
 
-        /*$article = (new ArticleManager())->getLast()->getAll();
-        Dev::pre($article);
-        /*$comment = (new CommentManager())->getAllByArticle($article['id']);
-        /*$date->setTimestamp($article['date']);
+        $article = (new ArticleManager())->getLast()->getAllData();
+        $comment = (new CommentManager())->getAllByArticle($article['id']);
+        $date->setTimestamp($article['date']);
         $article['date'] = $date->format("d/m/Y \à H\hi");
-        $article['user'] = $article['user']->getUsername();
+        $article['user'] = $article['user']['username'];
         foreach ($comment as $com){
-            $tab = $com->getAll();
+            $tab = $com->getAllData();
             $date->setTimestamp(intval($com->getDate()));
             $tab['date'] = $date->format("d/m/Y \à H\hi");
             $article['comment'][] = $tab;
 
-        }*/
+        }
 
-        self::render('home',"Page d'accueil");
+        self::render('home',"Page d'accueil",$article);
     }
 
     /**
