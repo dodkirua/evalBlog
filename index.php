@@ -17,15 +17,20 @@ if(isset($_GET['ctrl'])) {
                     ConnectController::connection();
                     break;
                 case 'registration':
+                   $return = RegistrationController::registration();
+                   if ($return === 1){
+                       $returnCon = ConnectController::connection();
+                       if ($returnCon === 1) {
+                           // retour sur l'espace principal mais connecte
+                       }
+                       else {
+                           //message d'erreur
+                       }
 
-                    $return = RegistrationController::registration();
-
-                    /* if ($return === 1){
-                       Dev::pre("enregistrement OK");
                    }
                    else{
-                       Dev::pre("enregistrement pas OK  code erreur : $return");
-                   }*/
+                      //message d'erreur
+                   }
                     break;
                 default :
                     break;

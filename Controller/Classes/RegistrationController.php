@@ -28,7 +28,7 @@ class RegistrationController extends Controller{
             $userManager = new UserManager();
             $user = $userManager->getByUsername(strtolower($username));
 
-            /*if (is_null($user)) {
+            if (is_null($user)) {
                 if (!is_null($pass)){
                     if ($pass === $_POST['passVerify']){
                         if ($userManager->add($username,password_hash($pass,PASSWORD_BCRYPT))) {
@@ -48,7 +48,7 @@ class RegistrationController extends Controller{
             }
             else {
                 return -4;
-            }*/
+            }
         }
         return -5;
     }

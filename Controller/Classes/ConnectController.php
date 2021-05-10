@@ -14,13 +14,12 @@ class ConnectController extends Controller {
      * test connection to a user
      * return :
      * 1 : ok
-     * -1 : wrong password
-     * -2 : $_POST variable problem
+     * -6 : wrong password
+     * -5 : $_POST variable problem
      * @return int
      */
     public static function connection() : int{
         if (isset($_POST['username']) && isset($_POST['pass'])){
-            echo '$Post ok';
             $username = mb_strtolower($_POST['username']);
             $pass = $_POST['pass'];
             $user = (new UserManager())->getByUsername($username);
