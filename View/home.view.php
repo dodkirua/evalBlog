@@ -2,6 +2,14 @@
     <div>
         <a href="/index.php?ctrl=connect">Connectez-vous</a>
     </div>
+   <nav>
+       <?php
+       include "View/_partials/menu.view.php";
+       if (!is_null($_SESSION['user']['id'])){
+           include "View/_partials/menuConnect.view.php";
+       }
+       ?>
+   </nav>
    <section class="sectionArticle">
        <div class="article">
            <div class="title">
@@ -27,10 +35,12 @@
                     <div class='content'>" .
                         $item['content']
                     . "</div>
-
                 </div>
                 ";
             }
+       if (!is_null($_SESSION['user']['id'])){
+           include "View/_partials/comment.view.php";
+       }
        ?>
    </section>
 
